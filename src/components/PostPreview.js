@@ -29,7 +29,6 @@ function PostPreview (props) {
     let bodyPreview = `${props.post.body.slice(0, 150)}...`;
     let postId      = props.post.postId
 
-
     return (
         <motion.div
             className    = {`content-card column`}
