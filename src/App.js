@@ -39,18 +39,24 @@ function ToggleButtons ({
 }
 
 const Posts = (props) => {
-
+    
     if (props.toggledButton === "Posts") {
         console.log("Showing Posts")
+
         return (
             props.posts.map((post, index) => {
+
+                let alreadyFaved;
+                if (props.favoriteIds.has(post.id)) alreadyFaved = true
+                else                                alreadyFaved = false
+
                 return (
                     <PostPreview
-                        post={post}
-                        addFavoriteId={props.addFavoriteId}
-                        removeFavoriteId={props.removeFavoriteId}
-                        alreadyFaved={props.favoriteIds.has(post)}
-                        key={index}
+                        post             = {post}
+                        addFavoriteId    = {props.addFavoriteId}
+                        deleteFavoriteId = {props.deleteFavoriteId}
+                        alreadyFaved     = {alreadyFaved}
+                        key              = {index}
                     />
                 )
             })
@@ -60,12 +66,12 @@ const Posts = (props) => {
         console.log("Showing Favorites")
         return (
             props.posts.map((post, index) => {
-                if (props.favoriteIds.has(post))
+                if (props.favoriteIds.has(post.id))
                     return (
                         <PostPreview
                             post             = {post}
                             addFavoriteId    = {props.addFavoriteId}
-                            removeFavoriteId = {props.removeFavoriteId}
+                            deleteFavoriteId = {props.deleteFavoriteId}
                             alreadyFaved     = {true}
                             key              = {index}
                         />
@@ -75,10 +81,7 @@ const Posts = (props) => {
 
             })
         )
-    }
-
-    
-        
+    }    
 }
 
 const Favorites = ({ favoriteIds, addFavoriteId }) => {
@@ -135,7 +138,7 @@ function App() {
     )
 
 
-    const handleButtonToggle = (segmentName) => {
+    const handleButtonToggle = (segmentName) => { 
         setToggledButton(segmentName);
     };
       
@@ -152,16 +155,17 @@ function App() {
 
                 {(toggledButton === "Posts" || toggledButton === "Favorites") && 
                     <Posts
-                    toggledButton={toggledButton}
-                    posts={posts}
-                    favoriteIds={favoriteIds}
-                    addFavoriteId={addFavoriteId }
+                        toggledButton={toggledButton}
+                        posts={posts}
+                        favoriteIds={favoriteIds }
+                        addFavoriteId={addFavoriteId}
+                        deleteFavoriteId={deleteFavoriteId}
                     />            
                 }
 
                 {selectedPostId !== null && 
                     <PostDetails
-                    selectedPostId = { selectedPostId}
+                        selectedPostId = { selectedPostId}
                     />
                 }
 

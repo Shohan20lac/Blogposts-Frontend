@@ -1,6 +1,6 @@
 import {motion} from 'framer-motion'
 import './PostPreviewStyles.css'
-
+import {useState} from 'react'
 
 const AnimatedButton = ({ label, handleButtonClick, backgroundColor, textColor}) => (
     <motion.div 
@@ -27,7 +27,9 @@ const AnimatedButton = ({ label, handleButtonClick, backgroundColor, textColor})
 function PostPreview (props) {
     let title       = props.post.title
     let bodyPreview = `${props.post.body.slice(0, 150)}...`;
-    let postId      = props.post.postId
+    let postId      = props.post.id
+
+    const [isFaved, setIsFaved] = useState(props.alreadyFaved);
 
     return (
         <motion.div
@@ -47,13 +49,31 @@ function PostPreview (props) {
                         label={"Read All"}
                         handleButtonClick= {() => console.log("Opening post:", props.post.title)}
                     />
-                    <AnimatedButton
-                        label={"Add to Favorites"}
-                        handleButtonClick={() => {
-                            console.log("Adding post to Favorites:", props.post.title);
-                            props.addFavoriteId (postId);
-                        }}
-                    />
+                    {
+
+                        isFaved 
+                            ? 
+                            <AnimatedButton
+                                label = "Remove from favorites"
+                                handleButtonClick={() => {
+                                    console.log("Removing post from Favorites:", props.post.title);
+                                    setIsFaved(false);
+                                    props.deleteFavoriteId(postId);
+                                    
+                                }}
+                            />
+                            : 
+                            <AnimatedButton
+                                label="Add to favorites"
+                                handleButtonClick={() => {
+                                    console.log("Adding post to Favorites:", props.post.title);
+                                    setIsFaved(true);
+                                    props.addFavoriteId(postId)
+                                }}
+                            />
+                    }
+
+                    
                 </div>
                 <AnimatedButton
                     label             = {"Comments"}
