@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 
 import PostPreview from './components/PostPreview'
-
+import {saveFavorites, loadFavorites } from './utilities/FavoriteStorage'
 
 function ToggleButtons ({  
     toggledButton,
@@ -84,16 +84,6 @@ const Posts = (props) => {
     }    
 }
 
-const Favorites = ({ favoriteIds, addFavoriteId }) => {
-    const text = `You have ${favoriteIds.length} Favorite Posts.`;
-
-    return (
-        <h3>
-            {text}
-        </h3>
-    )
-}
-
 const PostDetails = (props) => {
     return (
         <></>
@@ -109,13 +99,19 @@ function App() {
 
     const addFavoriteId = (newFavoriteId) => {
         setFavoriteIds((prevFavoriteIds) => {
-            return prevFavoriteIds.add(newFavoriteId);
+            const newFavoriteIds = new Set(prevFavoriteIds);
+            newFavoriteIds.add(newFavoriteId);
+            saveFavorites(newFavoriteIds);
+            return newFavoriteIds;
         });
     };
 
     const deleteFavoriteId = (deletedId) => {
         setFavoriteIds((prevFavoriteIds) => {
-            return prevFavoriteIds.delete(deletedId);
+            const newFavoriteIds = new Set(prevFavoriteIds);
+            newFavoriteIds.delete(deletedId);
+            saveFavorites(newFavoriteIds);
+            return newFavoriteIds;
         });
     };
 
@@ -132,7 +128,9 @@ function App() {
               })
               .catch(error => {
                 console.error('Error retrieving posts:', error);
-              }); 
+              });
+
+            setFavoriteIds (loadFavorites());
         },
         []
     )
@@ -155,12 +153,12 @@ function App() {
 
                 {(toggledButton === "Posts" || toggledButton === "Favorites") && 
                     <Posts
-                        toggledButton={toggledButton}
-                        posts={posts}
-                        favoriteIds={favoriteIds }
-                        addFavoriteId={addFavoriteId}
-                        deleteFavoriteId={deleteFavoriteId}
-                    />            
+                        toggledButton    = {toggledButton}
+                        posts            = {posts}
+                        favoriteIds      = {favoriteIds }
+                        addFavoriteId    = {addFavoriteId}
+                        deleteFavoriteId = {deleteFavoriteId}
+                    />
                 }
 
                 {selectedPostId !== null && 

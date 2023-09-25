@@ -1,8 +1,11 @@
-import {motion} from 'framer-motion'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeart } from '@fortawesome/free-solid-svg-icons'
+
+import { motion } from 'framer-motion'
 import './PostPreviewStyles.css'
 import {useState} from 'react'
 
-const AnimatedButton = ({ label, handleButtonClick, backgroundColor, textColor}) => (
+const AnimatedButton = ({ isFaved, label, handleButtonClick, backgroundColor, textColor}) => (
     <motion.div 
         className="show-more-button-container"
     >
@@ -19,6 +22,8 @@ const AnimatedButton = ({ label, handleButtonClick, backgroundColor, textColor})
             </span>
             <i></i>
         </button>
+
+        {isFaved && <FontAwesomeIcon icon={faHeart}/>}
 
     </motion.div>
 )
@@ -51,14 +56,15 @@ function PostPreview (props) {
                     />
                     {
 
-                        isFaved 
+                        isFaved
                             ? 
                             <AnimatedButton
-                                label = "Remove from favorites"
+                                isFaved={isFaved}
+                                label="Remove from favorites"
                                 handleButtonClick={() => {
                                     console.log("Removing post from Favorites:", props.post.title);
                                     setIsFaved(false);
-                                    props.deleteFavoriteId(postId);
+                                    props.deleteFavoriteId(props.post.id);
                                     
                                 }}
                             />
@@ -68,7 +74,7 @@ function PostPreview (props) {
                                 handleButtonClick={() => {
                                     console.log("Adding post to Favorites:", props.post.title);
                                     setIsFaved(true);
-                                    props.addFavoriteId(postId)
+                                    props.addFavoriteId (postId)
                                 }}
                             />
                     }
