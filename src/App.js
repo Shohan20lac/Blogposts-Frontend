@@ -4,7 +4,8 @@ import './App.css';
 import {motion} from 'framer-motion'
 
 import React from 'react'
-import {useState, useEffect} from 'react'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 import PostPreview from './components/PostPreview'
 
@@ -23,6 +24,7 @@ function ToggleButtons ({
                         <button
                             className={`tri-state-toggle-button ${toggledButton === label ? 'active' : ''}`}
                             onClick={() => handleButtonToggle(label)}
+                            key={index}
                         >
                             {label}
                         </button>
@@ -36,15 +38,48 @@ function ToggleButtons ({
     )
 }
 
-const Posts = ({posts, addFavoriteId}) => (
-    posts.map((post, index) => (
-        <PostPreview
-            post={post}
-            addFavoriteId={addFavoriteId}
-        />
-    ))
+const Posts = (props) => {
+
+    if (props.toggledButton === "Posts") {
+        console.log("Showing Posts")
+        return (
+            props.posts.map((post, index) => {
+                return (
+                    <PostPreview
+                        post={post}
+                        addFavoriteId={props.addFavoriteId}
+                        removeFavoriteId={props.removeFavoriteId}
+                        alreadyFaved={props.favoriteIds.has(post)}
+                        key={index}
+                    />
+                )
+            })
+        );
+    }
+    else {
+        console.log("Showing Favorites")
+        return (
+            props.posts.map((post, index) => {
+                if (props.favoriteIds.has(post))
+                    return (
+                        <PostPreview
+                            post             = {post}
+                            addFavoriteId    = {props.addFavoriteId}
+                            removeFavoriteId = {props.removeFavoriteId}
+                            alreadyFaved     = {true}
+                            key              = {index}
+                        />
+                    )
+                else 
+                    return <></>
+
+            })
+        )
+    }
+
+    
         
-);
+}
 
 const Favorites = ({ favoriteIds, addFavoriteId }) => {
     const text = `You have ${favoriteIds.length} Favorite Posts.`;
@@ -56,15 +91,32 @@ const Favorites = ({ favoriteIds, addFavoriteId }) => {
     )
 }
 
+const PostDetails = (props) => {
+    return (
+        <></>
+    );
+}
 
 function App() {
+    const [toggledButton, setToggledButton] = useState("Posts");
     const [posts, setPosts] = useState([]);
+    const [selectedPostId, setSelectedPostId] = useState(null);
 
-    const [favoriteIds, setFavoriteId] = useState([]);
+    const [favoriteIds, setFavoriteIds] = useState(new Set())
 
-    const addFavoriteId = (newFavorite) => {
-        setFavoriteId((prevFavorites) => [...prevFavorites, newFavorite]);
+    const addFavoriteId = (newFavoriteId) => {
+        setFavoriteIds((prevFavoriteIds) => {
+            return prevFavoriteIds.add(newFavoriteId);
+        });
     };
+
+    const deleteFavoriteId = (deletedId) => {
+        setFavoriteIds((prevFavoriteIds) => {
+            return prevFavoriteIds.delete(deletedId);
+        });
+    };
+
+
 
     useEffect(
         () => {
@@ -73,18 +125,15 @@ function App() {
               .then(data => {
                 setPosts (data)
 
-                data.forEach (post => {
-                  console.log(post.title);
-                });
+                console.log("Posts retrieved successfully")
               })
               .catch(error => {
-                console.error('Error:', error);
+                console.error('Error retrieving posts:', error);
               }); 
         },
         []
     )
 
-    const [toggledButton, setToggledButton] = useState("Posts");
 
     const handleButtonToggle = (segmentName) => {
         setToggledButton(segmentName);
@@ -101,8 +150,21 @@ function App() {
             
                 <h1> {toggledButton} </h1>
 
-                {toggledButton === "Posts" && <Posts posts={posts} addFavoriteId={addFavoriteId} />}
-                {toggledButton === "Favorites" && <Favorites favoriteIds={favoriteIds}  />}
+                {(toggledButton === "Posts" || toggledButton === "Favorites") && 
+                    <Posts
+                    toggledButton={toggledButton}
+                    posts={posts}
+                    favoriteIds={favoriteIds}
+                    addFavoriteId={addFavoriteId }
+                    />            
+                }
+
+                {selectedPostId !== null && 
+                    <PostDetails
+                    selectedPostId = { selectedPostId}
+                    />
+                }
+
 
           </header>
         </div>
