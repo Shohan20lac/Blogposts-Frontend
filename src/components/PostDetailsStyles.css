@@ -1,0 +1,76 @@
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Styles for PostPreview */
+.post-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.post-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.post-body {
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+.post-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.favorite-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.favorite-icon {
+    font-size: 1.2rem;
+    color: #e74c3c; /* Red color for unliked */
+    margin-right: 5px;
+}
+
+/* Styles for Comment */
+.comment {
+    padding-left: 10px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.comment-title {
+    font-weight: bold;
+    text-align: left;
+    margin-bottom:0
+}
+
+.comment-body {
+    text-align: left;
+    margin-top: 0
+}
+
+/* Other styles */
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .card {
+        max-width: 500px; /* Adjust the maximum width as needed */
+        margin: 0 auto; /* Center the card horizontally */
+    }
+}

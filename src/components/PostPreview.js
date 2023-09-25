@@ -28,71 +28,74 @@ const AnimatedButton = ({ isFaved, label, handleButtonClick, backgroundColor, te
     </motion.div>
 )
 
-
 function PostPreview (props) {
-    let title       = props.post.title
-    let bodyPreview = `${props.post.body.slice(0, 150)}...`;
-    let postId      = props.post.id
-
     const [isFaved, setIsFaved] = useState(props.alreadyFaved);
 
-    return (
-        <motion.div
-            className    = {`content-card column`}
-            whileHover   = {{ scale: 1.05 }}
-        >
-            <h3> {title}</h3>
-            <p> {bodyPreview} </p>
+    let selectPost = (selectedPostId) => {
+        props.setSelectedPostId(selectedPostId)
+    }
 
+    let title = props.post.title
+    let bodyPreview = `${props.post.body.slice(0, 150)}...`;
+    let postId = props.post.id
 
+   
+        return (
             <motion.div
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
+                className={`content-card column`}
+                whileHover={{ scale: 1.05 }}
             >
-                <div className='row centered'>
-                    <AnimatedButton
-                        label={"Read All"}
-                        handleButtonClick= {() => console.log("Opening post:", props.post.title)}
-                    />
-                    {
+                <h3> {title}</h3>
 
-                        isFaved
-                            ? 
-                            <AnimatedButton
-                                isFaved={isFaved}
-                                label="Remove from favorites"
-                                handleButtonClick={() => {
-                                    console.log("Removing post from Favorites:", props.post.title);
-                                    setIsFaved(false);
-                                    props.deleteFavoriteId(props.post.id);
-                                    
-                                }}
-                            />
-                            : 
-                            <AnimatedButton
-                                label="Add to favorites"
-                                handleButtonClick={() => {
-                                    console.log("Adding post to Favorites:", props.post.title);
-                                    setIsFaved(true);
-                                    props.addFavoriteId (postId)
-                                }}
-                            />
-                    }
 
-                    
-                </div>
-                <AnimatedButton
-                    label             = {"Comments"}
-                    handleButtonClick = {() => console.log("Opening comments to post:", props.post.title)}
-                />
+                {props.layoutStyle === "Cards" && <p> {bodyPreview} </p>} 
 
+
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                >
+                    <div className='row centered'>
+                        <AnimatedButton
+                            label={"Read All"}
+                            handleButtonClick={() => {
+                                console.log("Opening post:", props.post.title)
+                                selectPost(props.post.id)
+                            }}
+                        />
+
+                        {
+                            (props.layoutStyle === "Cards") && (
+                                isFaved
+                                    ? (
+                                        <AnimatedButton
+                                            isFaved={isFaved}
+                                            label="Remove from favorites"
+                                            handleButtonClick={() => {
+                                                console.log("Removing post from Favorites:", props.post.title);
+                                                setIsFaved(false);
+                                                props.deleteFavoriteId(props.post.id);
+                                            }}
+                                        />
+                                    )
+                                    : (
+                                        <AnimatedButton
+                                            label="Add to favorites"
+                                            handleButtonClick={() => {
+                                                console.log("Adding post to Favorites:", props.post.title);
+                                                setIsFaved(true);
+                                                props.addFavoriteId(postId)
+                                            }}
+                                        />
+                                    )
+                            )
+                        }
+
+                    </div>
+                </motion.div>
             </motion.div>
+        );
 
-
-
-        </motion.div>
-
-    )
 }
 
 export default PostPreview
