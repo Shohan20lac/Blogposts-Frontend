@@ -50,7 +50,8 @@ function PostPreview (props) {
 
                 {props.layoutStyle === "Cards" && <p> {bodyPreview} </p>} 
 
-
+                {
+                    (props.layoutStyle === "Cards") && (
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
@@ -63,36 +64,39 @@ function PostPreview (props) {
                                 selectPost(props.post.id)
                             }}
                         />
+                                {
 
-                        {
-                            (props.layoutStyle === "Cards") && (
-                                isFaved
-                                    ? (
-                                        <AnimatedButton
-                                            isFaved={isFaved}
-                                            label="Remove from favorites"
-                                            handleButtonClick={() => {
-                                                console.log("Removing post from Favorites:", props.post.title);
-                                                setIsFaved(false);
-                                                props.deleteFavoriteId(props.post.id);
-                                            }}
-                                        />
-                                    )
-                                    : (
-                                        <AnimatedButton
-                                            label="Add to favorites"
-                                            handleButtonClick={() => {
-                                                console.log("Adding post to Favorites:", props.post.title);
-                                                setIsFaved(true);
-                                                props.addFavoriteId(postId)
-                                            }}
-                                        />
-                                    )
-                            )
-                        }
+                                    isFaved
+                                        ? (
+                                            <AnimatedButton
+                                                isFaved={isFaved}
+                                                label="Remove from favorites"
+                                                handleButtonClick={() => {
+                                                    console.log("Removing post from Favorites:", props.post.title);
+                                                    setIsFaved(false);
+                                                    props.deleteFavoriteId(props.post.id);
+                                                }}
+                                            />
+                                        )
+                                        : (
+                                            <AnimatedButton
+                                                label="Add to favorites"
+                                                handleButtonClick={() => {
+                                                    console.log("Adding post to Favorites:", props.post.title);
+                                                    setIsFaved(true);
+                                                    props.addFavoriteId(postId)
+                                                }}
+                                            />
+                                        )
+
+                                }
+                        
+                            
 
                     </div>
-                </motion.div>
+                        </motion.div>
+                    )
+                }
             </motion.div>
         );
 
